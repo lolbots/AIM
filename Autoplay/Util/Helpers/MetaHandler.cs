@@ -29,13 +29,13 @@ namespace AIM.Autoplay.Util.Helpers
 
         public static string[] AP =
         {
-            "Ahri",  "Alistar", "Anivia", "Annie", "Azir", 
-            "Brand", "Braum", "Cassiopeia", "Chogath", "Diana", "Elise", "Evelynn", "ezreal", "FiddleSticks", "Fizz",
-            "Galio", "Gragas", "Heimerdinger", "Janna", "Karma", "Karthus", "Kassadin",
-            "Kayle",  "KogMaw", "LeBlanc", "Lissandra", "Lulu", "Lux", "Malphite", "Malzahar",
+            "Ahri", "Akali", "Alistar", "Amumu", "Anivia", "Annie", "Azir", "Blitzcrank",
+            "Brand", "Braum", "Cassiopeia", "Chogath", "Diana", "Elise", "Evelynn", "Ezreal", "FiddleSticks", "Fizz",
+            "Galio", "Gragas", "Hecarim", "Heimerdinger", "Irelia", "Janna", "Jax", "Karma", "Karthus", "Kassadin",
+            "Katarina", "Kayle", "Kennen", "KogMaw", "LeBlanc", "Lissandra", "Lulu", "Lux", "Malphite", "Malzahar",
             "Maokai", "Morderkaiser", "Morgana", "Nami", "Nautilus", "Nidalee", "Nunu", "Orianna", "RekSai", "Rumble",
             "Ryze", "Shaco", "Singed", "Sona", "Soraka", "Swain", "Syndra", "Teemo", "Thresh", "TwistedFate", "veigar",
-            "VelKoz", "Viktor", "Vladimir", "Xerath", "Ziggs", "Zilean", "Zyra"
+            "VelKoz", "Viktor", "Vladimir", "Xerath", "XinZhao", "Yorick", "Ziggs", "Zilean", "Zyra"
         };
 		public static string[] AD =
         {
@@ -45,31 +45,17 @@ namespace AIM.Autoplay.Util.Helpers
         };
 		private static readonly string[] ADT =
         {
-            "darius",  "evelynn", "fiora", "gangplank", "gnar", "jayce", "yorick", "warwick",
-            "pantheon", "irelia", "jarvaniv", "jax", "khazix", "nocturne", "olaf", 
+            "darius", "elise", "evelynn", "fiora", "gangplank", "gnar", "jayce",
+            "pantheon", "irelia", "jarvaniv", "jax", "khazix", "leesin", "nocturne", "olaf", "poppy", "renekton",
             "rengar", "riven", "shyvana", "trundle", "tryndamere", "udyr", "vi", "monkeyking", "xinzhao", "aatrox",
-             
+            "rumble", 
         };
 		 private static readonly string[] APT =
         {
-              "galio",  "malphite", "poppy", "elise",
-            "maokai", "rammus", "sejuani", "shen", "singed", "zac",
-            "nunu",  "alistar", "nautilus", "rumble", 
+            "amumu", "chogath", "drmundo", "galio", "hecarim", "malphite",
+            "maokai", "nasus", "rammus", "sejuani", "shen", "singed", "skarner", "volibear", "warwick", "yorick", "zac",
+            "nunu", "taric", "alistar", "garen", "nautilus", "braum"
         };
-		private static readonly string[] FT =
-        {
-	    "drmundo", "skarner", "braum", "nasus", "renekton", "chogath", "taric", "leesin", "garen", "volibear", "hecarim",
-	    "Blitzcrank", "amumu",
-		
-		};
-		
-	
-		private static readonly string[] EN =
-        {
-	    "Akali", "Kennen", "Katarina",
-		
-		};
-		
         private static readonly ItemId[] SRShopList =
         {
             ItemId.Zhonyas_Hourglass, ItemId.Rabadons_Deathcap,
@@ -90,20 +76,6 @@ namespace AIM.Autoplay.Util.Helpers
             ItemId.Zhonyas_Hourglass, ItemId.Rabadons_Deathcap,
             ItemId.Rod_of_Ages, ItemId.Rylais_Crystal_Scepter,ItemId.Athenes_Unholy_Grail,
             ItemId.Will_of_the_Ancients, ItemId.Liandrys_Torment, ItemId.Void_Staff, ItemId.Abyssal_Scepter, ItemId.Sorcerers_Shoes
-        };
-
-	 private static readonly ItemId[] ARAMShopListEN =
-        {
-            ItemId.Zhonyas_Hourglass, ItemId.Rabadons_Deathcap,
-            ItemId.Rylais_Crystal_Scepter,
-            ItemId.Will_of_the_Ancients, ItemId.Liandrys_Torment, ItemId.Void_Staff, ItemId.Abyssal_Scepter, ItemId.Sorcerers_Shoes
-        };
-		
-		private static readonly ItemId[] ARAMShopListFT =
-        {
-            ItemId.Sunfire_Cape, ItemId.Randuins_Omen,
-            ItemId.Spirit_Visage, ItemId.Banshees_Veil, ItemId.Frozen_Heart,
-            ItemId.Locket_of_the_Iron_Solari, ItemId.Orb_of_Winter, ItemId.Thornmail, ItemId.Mercurys_Treads
         };
 
         private static readonly ItemId[] ARAMShopListAD =
@@ -222,18 +194,6 @@ namespace AIM.Autoplay.Util.Helpers
 					Console.WriteLine("APD");
                     return ARAMShopListAP;
                 }
-				if (FT.Any(FTchamp => Heroes.Me.BaseSkinName.ToLower() == FTchamp.ToLower()))
-                {
-					Console.WriteLine("FT");
-                    return ARAMShopListFT;
-                }
-				if (EN.Any(ENchamp => Heroes.Me.BaseSkinName.ToLower() == ENchamp.ToLower()))
-                {
-					Console.WriteLine("EN");
-                    return ARAMShopListEN;
-                }
-
-
 				 if (AD.Any(adchamp => Heroes.Me.BaseSkinName.ToLower() == adchamp.ToLower()))
                 {
 					Console.WriteLine("ADC");

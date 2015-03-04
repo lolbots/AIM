@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using AIM.Autoplay.Util;
 using AIM.Autoplay.Util.Data;
 using AIM.Autoplay.Util.Helpers;
 using AIM.Autoplay.Util.Objects;
@@ -11,7 +12,7 @@ namespace AIM.Autoplay.Modes
 {
     public abstract class Base
     {
-        private static readonly Obj_AI_Hero Player = ObjectHandler.Player;
+        private static readonly Obj_AI_Hero Player = ObjectManager.Player;
         public static int LastMove;
         public static Menu Menu;
         public static Menu Orbwalker;
@@ -30,12 +31,13 @@ namespace AIM.Autoplay.Modes
             //AIM Settings
             Menu.AddItem(new MenuItem("Enabled", "Enabled").SetValue(new KeyBind(32, KeyBindType.Toggle)));
             Menu.AddItem(new MenuItem("LowHealth", "Self Low Health %").SetValue(new Slider(20, 10, 50)));
+			Menu.AddItem(new MenuItem("MinDist", "Min Dist ").SetValue(new Slider(100, -500, 1000)));
+			Menu.AddItem(new MenuItem("MaxDist", "Max Dist ").SetValue(new Slider(300, -500, 1000)));
 
             //Humanizer
             var move = Menu.AddSubMenu(new Menu("Humanizer", "humanizer"));
             move.AddItem(new MenuItem("MovementEnabled", "Enabled").SetValue(true));
-            move.AddItem(new MenuItem("MovementDelay", "Movement Delay")).SetValue(new Slider(400, 0, 1000));
-
+            move.AddItem(new MenuItem("MovementDelay", "Movement Delay")).SetValue(new Slider(400, 0, 5000));
             Menu.AddToMainMenu();
 
             Console.WriteLine("Menu Init Success!");
@@ -45,6 +47,7 @@ namespace AIM.Autoplay.Modes
             OrbW = new Orbwalking.Orbwalker(Orbwalker);
 
             Obj_AI_Base.OnIssueOrder += Obj_AI_Base_OnIssueOrder;
+
         }
 
         public static Constants ObjConstants { get; protected set; }
@@ -53,29 +56,27 @@ namespace AIM.Autoplay.Modes
         public static Turrets ObjTurrets { get; protected set; }
         public static HQ ObjHQ { get; protected set; }
         public static Orbwalking.Orbwalker OrbW { get; set; }
-        public virtual void OnGameLoad(EventArgs args) {}
-        public virtual void OnGameUpdate(EventArgs args) {}
+        public virtual void OnGameLoad(EventArgs args) { }
+        public virtual void OnGameUpdate(EventArgs args) { }
 
         #region Humanizer
-
         private static void Obj_AI_Base_OnIssueOrder(Obj_AI_Base sender, GameObjectIssueOrderEventArgs args)
         {
             if (sender == null || !sender.IsValid || !sender.IsMe)
             {
                 return;
             }
+			int mvmtDelay = Randoms.Rand.Next(50, Modes.Base.Menu.Item("MovementDelay").GetValue<Slider>().Value);
             if (args.Order == GameObjectOrder.MoveTo)
             {
-                if (Environment.TickCount - LastMove < Menu.Item("MovementDelay").GetValue<Slider>().Value &&
+                if (Environment.TickCount - LastMove < mvmtDelay &&
                     Menu.Item("MovementEnabled").GetValue<bool>())
                 {
                     args.Process = false;
                     return;
                 }
-                if (ObjectHandler.Get<Obj_AI_Turret>().Any(t => t.IsEnemy && t.Distance(args.TargetPosition) < 800) &&
-                    MetaHandler.CountNearbyAllyMinions(
-                        ObjectHandler.Get<Obj_AI_Turret>()
-                            .FirstOrDefault(t => t.IsEnemy && t.Distance(args.TargetPosition) < 800), 800) <= 2)
+                if (ObjectManager.Get<Obj_AI_Turret>().Any(t => t.IsEnemy && t.Distance(args.TargetPosition) < 800) 
+					&& MetaHandler.CountNearbyAllyMinions(ObjectManager.Get<Obj_AI_Turret>().FirstOrDefault(t => t.IsEnemy && t.Distance(args.TargetPosition) < 800), 800) <= 2)
                 {
                     args.Process = false;
                     return;
@@ -87,13 +88,11 @@ namespace AIM.Autoplay.Modes
             {
                 return;
             }
-            if (args.Target.IsEnemy && args.Target is Obj_AI_Hero && sender.UnderTurret(true) &&
-                (args.Order == GameObjectOrder.AutoAttack || args.Order == GameObjectOrder.AttackUnit))
+            if (args.Target.IsEnemy && args.Target is Obj_AI_Hero && sender.UnderTurret(true) && (args.Order == GameObjectOrder.AutoAttack || args.Order == GameObjectOrder.AttackUnit))
             {
                 args.Process = false;
             }
         }
-
         #endregion
 
         #region Minions
@@ -113,7 +112,7 @@ namespace AIM.Autoplay.Modes
             if (nearestTurret != null)
             {
                 return
-                    ObjectHandler.Get<Obj_AI_Minion>()
+                    ObjectManager.Get<Obj_AI_Minion>()
                         .Count(minion => minion.IsAlly && !minion.IsDead && minion.Distance(nearestTurret) < 650) <= 2;
             }
             return false;
